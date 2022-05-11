@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -10,7 +10,7 @@ function Post() {
 
   const [postContent, setPostContent] = useState({});
   const [commentsByPost, setCommentsByPost] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getPostContent = async (id) => {
@@ -31,6 +31,7 @@ function Post() {
       );
 
       setCommentsByPost(filteredComments);
+      setLoading(false);
     };
 
     getPostContent(id).then(() => {
@@ -41,8 +42,14 @@ function Post() {
   return (
     <MainLayout>
       <div>
-        <h2>{postContent.title}</h2>
-        <p>{postContent.body}</p>
+        {!loading && (
+          <Fragment>
+            <h2>{postContent.title}</h2>
+            <p>{postContent.body}</p>
+          </Fragment>
+        )}
+
+        {loading && <p>Loading...</p>}
 
         <h3>Comments</h3>
 
